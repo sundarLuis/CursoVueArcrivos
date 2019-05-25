@@ -15,25 +15,38 @@
 <body>
     <div id="app" class="container">
         <padre></padre>
-        <hijo></hijo>
+        
     </div>
 
     <script>
         Vue.component('padre',{
          template: //html
          `<div>
-             <h1>numero {{ $store.state.numero}}</h1>
+             <h1>numero {{numero}}</h1>
+             <hijo></hijo>
          </div>
-         `
+         `,
+         computed:{
+            ...Vuex.mapState([
+                'numero'
+            ])
+         }
         })
 
         Vue.component('hijo',{
             template: //html
          `<div>
-             <button @click="$store.commit('aumentar')">+</button>
-             <h1>numero {{ $store.state.numero}}</h1>
+             <button @click="aumentar">+</button>
+             <button @click="disminuir(2)">-</button>
+             <h1>numero {{ numero}}</h1>
          </div>
-         `
+         `,
+         computed:{
+            ...Vuex.mapState(['numero'])
+         },
+         methods:{
+             ...Vuex.mapMutations(['aumentar','disminuir'])
+         }
         })
 
         //Vuex
@@ -44,9 +57,13 @@
           mutations:{
             aumentar(state){
                 state.numero++
+            },
+            disminuir(state,n){
+                state.numero-=n
             }
           }
         });
+
         //principal
         new Vue({
             el: '#app',
